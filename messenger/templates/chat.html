@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Чат — {{ username }}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+  <style>
+    body {margin:0; font-family:Arial,sans-serif;}
+    #sidebar {
+      width:260px; float:left; height:100vh; background:#f5f5f5;
+      overflow-y:auto; border-right:1px solid #ddd;
+    }
+    #content {margin-left:260px; padding:20px;}
+    .friend {
+      padding:14px 20px; cursor:pointer; border-bottom:1px solid #eee;
+      text-decoration:none; color:#000; display:block;
+    }
+    .friend:hover {background:#e0e0e0;}
+    .online::after {content:" •"; color:#4caf50; font-size:1.5em; margin-left:4px;}
+    .logout {position:fixed; top:16px; right:24px; color:#d32f2f;}
+  </style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h3 style="padding:16px 20px; margin:0;">Привет, {{ username }}!</h3>
+  {% for f in friends %}
+    <a href="/chat/@{{ f }}" class="friend {% if f in online %}online{% endif %}">
+      @{{ f }}
+    </a>
+  {% endfor %}
+</div>
+
+<div id="content">
+  <h2>Выбери, с кем писать</h2>
+  <p>Сейчас онлайн: {{ online|length }} человек</p>
+  <a href="/logout" class="logout">Выйти</a>
+</div>
+
+<script>
+  const socket = io();
+  socket.on('connect', () => console.log('Socket подключён'));
+</script>
+</body>
+</html>
